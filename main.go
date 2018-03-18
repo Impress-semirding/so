@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+
+	"github.com/go-redis/redis"
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
@@ -23,24 +24,21 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "home.html")
 }
 
-func main() {
-	channels := "dingxue"
+// need struct msg.
+func messageManager() *redis.Message {
+	channels := "btc-msg"
 	manager := connect()
 	pubsub := manager.subscribe(channels)
 	defer pubsub.Close()
-	subscr, err1 := pubsub.ReceiveTimeout(time.Second)
-	if err1 != nil {
-		panic(err1)
+	for {
+		msg, _ := pubsub.ReceiveMessage()
+		fmt.Println(msg.Channel, msg.Payload)
+		// return msg
 	}
-	fmt.Println(subscr)
-	me := &message{id: 12121}
-	manager.publish(channels, me.id)
-	msg, err2 := pubsub.ReceiveMessage()
-	if err2 != nil {
-		panic(err2)
-	}
+}
 
-	fmt.Println(msg.Channel, msg.Payload)
+func main() {
+	go messageManager()
 
 	flag.Parse()
 	hub := newHub()
