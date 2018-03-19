@@ -14,8 +14,8 @@ type msgService struct {
 // need struct msg.
 func listen(channels, reciever string, msgs chan map[string]string) *redis.Message {
 	service := map[string]string{
-		reciever: reciever,
-		channels: channels,
+		"reciever": reciever,
+		"channels": channels,
 	}
 	manager := connect()
 	pubsub := manager.subscribe(service["channels"])
