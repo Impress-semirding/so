@@ -12,13 +12,9 @@ type msgService struct {
 }
 
 // need struct msg.
-func listen(channels, reciever string, result chan map[string]string) *redis.Message {
-	// service := &msgService{
-	// 	reciever: reciever,
-	// 	channels: channels,
-	// }
+func listen(channels, reciever string, msgs chan map[string]string) *redis.Message {
 	service := map[string]string{
-		reciever: "localhosyt",
+		reciever: reciever,
 		channels: channels,
 	}
 	manager := connect()
@@ -27,6 +23,6 @@ func listen(channels, reciever string, result chan map[string]string) *redis.Mes
 	for {
 		msg, _ := pubsub.ReceiveMessage()
 		service["msgBody"] = msg.Payload
-		result <- service
+		msgs <- service
 	}
 }
