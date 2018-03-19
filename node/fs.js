@@ -45,6 +45,12 @@ function pub(key, score, msg) {
     });
 }
 
-pub(1,1,[{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1}])
+var inter = 0;
+setInterval(() => {
+  pub(1,1,{a: inter})
+  inter++;
+}, 100);
+
+// pub(1,1,[{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1},{a:1}])
 
 // module.exports = pub; 

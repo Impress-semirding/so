@@ -24,7 +24,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	const channels = "Bi-seller-order"
-	msgs := make(chan map[string]string, 10)
+	msgs := make(chan map[string]string, 10000)
 	go listen(channels, "localhost", msgs)
 
 	flag.Parse()
