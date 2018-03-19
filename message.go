@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/go-redis/redis"
 )
 
@@ -23,6 +25,7 @@ func listen(channels, reciever string, msgs chan map[string]string) *redis.Messa
 	for {
 		msg, _ := pubsub.ReceiveMessage()
 		service["msgBody"] = msg.Payload
+		fmt.Println(msg.Payload)
 		msgs <- service
 	}
 }
