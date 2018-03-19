@@ -2,11 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/go-redis/redis"
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
@@ -24,21 +21,11 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "home.html")
 }
 
-// need struct msg.
-func messageManager() *redis.Message {
-	channels := "btc-msg"
-	manager := connect()
-	pubsub := manager.subscribe(channels)
-	defer pubsub.Close()
-	for {
-		msg, _ := pubsub.ReceiveMessage()
-		fmt.Println(msg.Channel, msg.Payload)
-		// return msg
-	}
-}
-
 func main() {
-	go messageManager()
+
+	const channels = "Bi-seller-order"
+	msgs := make(chan map[string]string, 10)
+	go listen(channels, "localhost", msgs)
 
 	flag.Parse()
 	hub := newHub()
