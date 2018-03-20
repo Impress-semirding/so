@@ -45,12 +45,19 @@ func listen(channels, reciever string, msgs chan string) *redis.Message {
 			fmt.Println(err)
 		}
 		sinal := data["platform"] + "-" + data["types"]
-		fmt.Print(sinal)
 		// service["msgBody"] = msg.Payload
 		msgs <- sinal
 	}
 }
 
-func recieveSinal(msgs chan string) {
-
+func recieveSinal(sinals chan string) {
+	for range sinals {
+		s := <-sinals
+		switch {
+		case s == "coincola-btc":
+			fmt.Print(111)
+		default:
+			fmt.Print(222)
+		}
+	}
 }

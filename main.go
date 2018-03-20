@@ -24,7 +24,7 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 func main() {
 
 	const channels = "virtual-currency"
-	msgs := make(chan string, 10000)
+	msgs := make(chan string, 4)
 	go listen(channels, "localhost", msgs)
 
 	go recieveSinal(msgs)
