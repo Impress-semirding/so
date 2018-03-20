@@ -26,6 +26,14 @@ func (server *redisManager) publish(channel string, message interface{}) {
 	server.client.Publish(channel, message)
 }
 
+func (server *redisManager) get(key string) string {
+	val, err := server.client.Get(key).Result()
+	if err != nil {
+		panic(err)
+	}
+	return val
+}
+
 // func ExampleClient() {
 // 	err := client.Set("key", "value", 0).Err()
 // 	if err != nil {

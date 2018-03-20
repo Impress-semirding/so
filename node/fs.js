@@ -45,9 +45,12 @@ function pub(key, score, msg) {
     });
 }
 
+client.set('coincola_btc', JSON.stringify([{a: 1, b: 2, c: 3}, {a: 1, b: 2, c: 3}, {a: 1, b: 2, c: 3}]))
+
 var inter = 0;
 setInterval(() => {
-  pub(1,1,{platform: "coincola", types: 'btc'})
+  pub(1,1,{platform: "coincola", types: 'btc', status: "init"})
+  // pub(1,1,{platform: "coincola", types: 'btc', status: "update"})
   inter++;
 }, 2000);
 
