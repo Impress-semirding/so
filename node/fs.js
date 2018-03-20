@@ -41,13 +41,13 @@ function dealWithMsg(message) {
 function pub(key, score, msg) {
     client.zadd(key, score, msg, function () {
         const bufferBody = new Buffer(JSON.stringify(msg), 'utf8');
-        client.publish("Bi-seller-order", bufferBody);//client将member发布到btc-msg这个频道,go去处理
+        client.publish("virtual-currency", bufferBody);//client将member发布到btc-msg这个频道,go去处理
     });
 }
 
 var inter = 0;
 setInterval(() => {
-  pub(1,1,{a: inter})
+  pub(1,1,{platform: "coincola", types: 'btc'})
   inter++;
 }, 2000);
 

@@ -1,7 +1,8 @@
 package main
 
 import (
-	"strconv"
+	"encoding/json"
+	"fmt"
 
 	"github.com/go-redis/redis"
 )
@@ -13,13 +14,22 @@ type msgService struct {
 	msgBody    string
 }
 
+// type Message struct {
+// 	Asks []Order `json:"Bids"`
+// 	Bids []Order `json:"Asks"`
+// }
+
+// type Order struct {
+// 	Price  float64
+// 	Volume float64
+// }
 type msgMeta struct {
 	platform string
 	types    string
 }
 
 // need struct msg.
-func listen(channels, reciever string, msgs chan map[string]string) *redis.Message {
+func listen(channels, reciever string, msgs chan string) *redis.Message {
 	service := map[string]string{
 		"reciever": reciever,
 		"channels": channels,
@@ -29,19 +39,18 @@ func listen(channels, reciever string, msgs chan map[string]string) *redis.Messa
 	defer pubsub.Close()
 	for {
 		msg, _ := pubsub.ReceiveMessage()
-		var s []string
-		mm := &msgMeta{}
-		mm = msg.Payload
-		s = append(s, strconv.Itoa(msg.Payload.platform))
-		// s = append(s, strconv.Itoa(msg.Payload.type))
-		if service[s] == nil {
-
+		// var data []byte = []byte(msg.Payload)
+		var data map[string]string
+		if err := json.Unmarshal([]byte(msg.Payload), &data); err != nil {
+			fmt.Println(err)
 		}
-		service["msgBody"] = msg.Payload
-		msgs <- service
+		sinal := data["platform"] + "-" + data["types"]
+		fmt.Print(sinal)
+		// service["msgBody"] = msg.Payload
+		msgs <- sinal
 	}
 }
 
-func deal(msgs chan map[string]string) {
+func recieveSinal(msgs chan string) {
 
 }
