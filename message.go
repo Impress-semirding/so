@@ -59,13 +59,13 @@ func recieveSinal(sinals chan map[string]string) {
 			key := s["platform"] + "_" + s["types"]
 
 			list := redisClient.get(key)
-			var test []map[string]interface{}
-			if err := json.Unmarshal([]byte(list), &test); err == nil {
+			var values []map[string]interface{}
+			if err := json.Unmarshal([]byte(list), &values); err == nil {
 
 			} else {
 				fmt.Println(err)
 			}
-			coincola[key] = test
+			coincola[key] = values
 		case s["status"] == "update":
 			fmt.Print(111)
 		default:
