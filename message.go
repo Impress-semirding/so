@@ -51,23 +51,38 @@ func listen(channels, reciever string, msgs chan map[string]string) *redis.Messa
 	}
 }
 
+func dealMsg(s map[string]string) *[]map[string]interface{} {
+	key := s["platform"] + "_" + s["types"]
+
+	list := redisClient.get(key)
+	var values *[]map[string]interface{}
+	// var values = make([]map[string]interface{}, 10, 50)
+	if err := json.Unmarshal([]byte(list), &values); err == nil {
+
+	} else {
+		fmt.Println(err)
+	}
+	return values
+}
+
 func recieveSinal(sinals chan map[string]string) {
 	for range sinals {
 		s := <-sinals
 		switch {
 		case s["status"] == "init":
-			key := s["platform"] + "_" + s["types"]
-
-			list := redisClient.get(key)
-			var values []map[string]interface{}
-			if err := json.Unmarshal([]byte(list), &values); err == nil {
-
-			} else {
-				fmt.Println(err)
+			msg := dealMsg(s)
+			//	init, put redis data on local storage.
+			for _, num := range *msg {
+				fmt.Print(num["a"])
 			}
-			coincola[key] = values
+
 		case s["status"] == "update":
-			fmt.Print(111)
+			msg := dealMsg(s)
+			// update, if some data change,compare it with local storage other data.
+			for _, num := range *msg {
+				fmt.Print(num["a"])
+			}
+
 		default:
 			fmt.Print(222)
 		}
