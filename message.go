@@ -66,7 +66,7 @@ func dealMsg(s map[string]string) *[]map[string]interface{} {
 }
 
 func recieveSinal(sinals chan map[string]string) {
-	for range sinals {
+	for {
 		s := <-sinals
 		switch {
 		case s["status"] == "init":
